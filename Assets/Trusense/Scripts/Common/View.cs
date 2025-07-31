@@ -42,7 +42,7 @@ namespace Trusense.Common
         /// Abstract method to initialize the view.
         /// Derived classes must implement this to set up references, load initial data, or perform setup tasks.
         /// </summary>
-        public abstract void Initialize();
+        public abstract void Initialized();
 
         /// <summary>
         /// Virtual method to refresh the view's content without reinitializing.
@@ -72,7 +72,7 @@ namespace Trusense.Common
         {
             if (!_isInitialized)
             {
-                Initialize();
+                Initialized();
                 _isInitialized = true;
             }
             if (_isVisible) return; // Skip if already visible.
@@ -89,7 +89,7 @@ namespace Trusense.Common
         {
             if (autoInitialize)
             {
-                Initialize();
+                Initialized();
                 _isInitialized = true;
             }
         }

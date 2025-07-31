@@ -38,7 +38,7 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
         [SerializeField] private RectTransform PopupTransform; // RectTransform for animations.
 
         // === Internal State ===
-        private bool _isInitialized = false; // Tracks initialization state.
+        private new bool _isInitialized = false; // Tracks initialization state.
 
         // === Initialization Logic ===
         /// <summary>
@@ -46,7 +46,7 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
         /// Overrides the abstract Initialize method from the View base class.
         /// </summary>
         [System.Obsolete]
-        public override void Initialize()
+        public override void Initialized()
         {
             if (_isInitialized)
             {
@@ -111,7 +111,7 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
         {
             if (!_isInitialized)
             {
-                Initialize(); // Ensures initialization before showing.
+                Initialized();
             }
 
             if (_isVisible) return; // Skip if already visible (inherited from View).
@@ -145,21 +145,19 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
         /// </summary>
         public override void Hide()
         {
-            if (!_isVisible) return; // Skip if already hidden (inherited from View).
-
+            if (!_isVisible) return; 
             if (PopupTransform == null)
             {
-                Debug.LogError($"{GetType().Name}: PopupTransform is not assigned in the Inspector.", this);
-                gameObject.SetActive(false); // Deactivate GameObject.
-                _isVisible = false; // Update visibility state.
+                gameObject.SetActive(false); 
+                _isVisible = false;
                 // OnHidden?.Invoke(); // Notify listeners after state change (valid in Popup).
                 return;
             }
 
-            DOTween.Kill(this); // Stops any existing animations.
-            PopupTransform.DOScale(Vector3.zero, hideDuration) // Animates to zero scale.
-                .SetEase(hideEase) // Applies custom easing.
-                .SetId(this) // Tags animation for cleanup.
+            DOTween.Kill(this); 
+            PopupTransform.DOScale(Vector3.zero, hideDuration) 
+                .SetEase(hideEase) 
+                .SetId(this) 
                 .OnComplete(() =>
                 {
                     gameObject.SetActive(false); // Deactivates after animation.

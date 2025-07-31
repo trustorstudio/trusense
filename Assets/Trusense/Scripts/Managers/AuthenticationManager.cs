@@ -4,6 +4,6 @@ namespace Trusense.Managers
 {
     public class AuthenticationManager : Singleton<AuthenticationManager>
     {
-
+            
     }
 }
