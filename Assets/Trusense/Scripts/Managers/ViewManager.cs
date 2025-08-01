@@ -3,6 +3,7 @@ using UnityEngine;
 using Trusense.Common;
 using Trusense.Tools;
 using System.Collections.Generic;
+using Trusense.Managers;
 
 namespace Trusense.Managers
 {
@@ -34,10 +35,8 @@ namespace Trusense.Managers
         /// <summary>
         /// Initializes all views, builds the view cache, and shows the start view.
         /// </summary>
-        protected override void Awake()
+        protected void Start()
         {
-            base.Awake();
-
             Initialized();
         }
 
@@ -90,6 +89,7 @@ namespace Trusense.Managers
         /// </summary>
         /// <typeparam name="T">The type of view to show.</typeparam>
         /// <param name="remember">Whether to add the current view to history.</param>
+        [Obsolete]
         public void ShowView<T>(bool remember = true) where T : View
         {
             T view = GetView<T>();
@@ -104,12 +104,15 @@ namespace Trusense.Managers
         /// </summary>
         /// <param name="view">The view to show.</param>
         /// <param name="remember">Whether to add the current view to history.</param>
+        [Obsolete]
         public void ShowView(View view, bool remember = true)
         {
             if (view == null)
             {
                 return;
             }
+
+            PopupManager.Instance.HideAllPopups();
 
             if (currentView != null && currentView != view)
             {

@@ -1,6 +1,8 @@
 using UnityEngine;
 using Trusense.Common;
 using UnityEngine.UI;
+using Trusense.Managers;
+using Trusense.Components.Popups;
 
 namespace Trusense.Components.Views
 {
@@ -26,6 +28,7 @@ namespace Trusense.Components.Views
         /// Initializes the TitleView.
         /// This method should set up any necessary references or initial state for the TitleView.
         /// </summary>
+        [System.Obsolete]
         public override void Initialized()
         {
             if (_isInitialized)
@@ -36,19 +39,25 @@ namespace Trusense.Components.Views
             if (startButton != null)
             {
                 startButton.onClick.RemoveAllListeners();
-                startButton.onClick.AddListener(OnStartButtonClicked);
+                startButton.onClick.AddListener(OnStartButton);
             }
 
             if (accountButton != null)
             {
                 accountButton.onClick.RemoveAllListeners();
-                accountButton.onClick.AddListener(OnAccountButtonClicked);
+                accountButton.onClick.AddListener(OnAccountButton);
             }
 
             if (facebookButton != null)
             {
                 facebookButton.onClick.RemoveAllListeners();
-                facebookButton.onClick.AddListener(OnFacebookButtonClicked);
+                facebookButton.onClick.AddListener(OnFacebookButton);
+            }
+
+            if (AuthManager.Instance.IsLoggedIn)
+            {
+                accountButton.gameObject.SetActive(!AuthManager.Instance.IsLoggedIn);
+                facebookButton.gameObject.SetActive(!AuthManager.Instance.IsLoggedIn);
             }
 
             _isInitialized = true;
@@ -77,17 +86,18 @@ namespace Trusense.Components.Views
         }
 
 
-        private void OnStartButtonClicked()
+        private void OnStartButton()
         {
 
         }
 
-        private void OnAccountButtonClicked()
+        [System.Obsolete]
+        private void OnAccountButton()
         {
-
+            PopupManager.Instance.ShowPopup<SignInPopup>();
         }
 
-        private void OnFacebookButtonClicked()
+        private void OnFacebookButton()
         {
 
         }

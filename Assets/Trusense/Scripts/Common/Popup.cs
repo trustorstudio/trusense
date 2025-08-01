@@ -2,9 +2,8 @@ using DG.Tweening; // Imports DG.Tweening for smooth animation utilities.
 using UnityEngine; // Imports core Unity classes like MonoBehaviour and GameObject.
 using UnityEngine.UI; // Imports Unity UI classes like Button and RectTransform.
 using Trusense.Common; // Imports the View base class.
-using TankOfValor.Managers.UI; // Imports PopupManager for integration.
-using System.Collections; // Imports for IEnumerator support in HideAsync.
-
+using System.Collections;
+using Trusense.Managers; // Imports for IEnumerator support in HideAsync.
 namespace Trusense.Common // Namespace for shared, reusable UI components.
 {
     // === Class Header ===
@@ -17,17 +16,17 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
     {
         // === Animation Settings ===
         [Header("Animation Settings")]
-        [Tooltip("Duration (in seconds) for the popup show animation. Must be positive.")] 
+        [Tooltip("Duration (in seconds) for the popup show animation. Must be positive.")]
         [SerializeField, Min(0.01f)] private float showDuration = 0.5f; // Duration for scaling from 0 to 1.
 
         [Tooltip("Duration (in seconds) for the popup hide animation. Must be positive.")] // Tooltip for hideDuration.
         [SerializeField, Min(0.01f)] private float hideDuration = 0.5f; // Duration for scaling from 1 to 0.
 
         [Tooltip("Easing type for the show animation.")]
-        [SerializeField] private Ease showEase = Ease.OutBack; 
+        [SerializeField] private Ease showEase = Ease.OutBack;
 
         [Tooltip("Easing type for the hide animation.")]
-        [SerializeField] private Ease hideEase = Ease.InBack; 
+        [SerializeField] private Ease hideEase = Ease.InBack;
 
         // === UI Components ===
         [Header("UI Components")] // Groups UI component fields in the Unity Inspector.

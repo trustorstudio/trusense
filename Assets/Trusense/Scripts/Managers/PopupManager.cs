@@ -5,7 +5,7 @@ using Trusense.Tools;
 using System.Collections.Generic;
 
 
-namespace TankOfValor.Managers.UI
+namespace Trusense.Managers
 {
     /// <summary>
     /// Singleton manager for handling UI popups.
@@ -35,13 +35,12 @@ namespace TankOfValor.Managers.UI
         /// <summary>
         /// Initializes all popups and builds the popup cache on startup.
         /// </summary>
-        protected override void Awake()
+        protected void Start()
         {
-            base.Awake(); // Ensures singleton initialization from MMSingleton.
-            InitializePopups();
+            Initialized();
         }
 
-        private void InitializePopups()
+        private void Initialized()
         {
             if (popups == null || popups.Length == 0)
             {
