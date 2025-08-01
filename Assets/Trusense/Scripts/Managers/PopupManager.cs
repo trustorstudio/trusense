@@ -60,7 +60,7 @@ namespace TankOfValor.Managers.UI
                     continue;
                 }
                 popupCache[popup.GetType()] = popup;
-                popup.Initialize();
+                popup.Initialized();
                 popup.Hide();
             }
         }
@@ -175,7 +175,7 @@ namespace TankOfValor.Managers.UI
                 }
             }
             HistoryPopups.Clear();
-            OnPopupChanged?.Invoke(null); 
+            OnPopupChanged?.Invoke(null);
         }
 
 

@@ -37,6 +37,7 @@ namespace Trusense.Managers
         protected override void Awake()
         {
             base.Awake();
+
             Initialized();
         }
 
@@ -52,16 +53,14 @@ namespace Trusense.Managers
             {
                 if (view == null)
                 {
-                    Debug.LogWarning($"{GetType().Name}: Null view found in views array.", this);
                     continue;
                 }
                 if (viewCache.ContainsKey(view.GetType()))
                 {
-                    Debug.LogWarning($"{GetType().Name}: Duplicate view type {view.GetType().Name} found.", this);
                     continue;
                 }
                 viewCache[view.GetType()] = view;
-                view.Initialize();
+                view.Initialized();
                 view.Hide();
             }
 
@@ -139,7 +138,7 @@ namespace Trusense.Managers
             View lastView = historiesView.Pop();
             if (lastView != null)
             {
-                ShowView(lastView, false); 
+                ShowView(lastView, false);
             }
         }
 
