@@ -23,7 +23,6 @@ namespace Trusense.Components.Views
         [Header("UI Components")]
         [Tooltip("Text component to display loading progress percentage.")]
         [SerializeField] private TMP_Text loadingText;
-
         [Tooltip("Slider component to visualize loading progress.")]
         [SerializeField] private Slider loadingSlider;
 
@@ -56,23 +55,21 @@ namespace Trusense.Components.Views
         /// Initializes the LoadingView by resetting the UI and verifying UGS Authentication.
         /// Overrides the abstract Initialize method from the View base class.
         /// </summary>
-        [System.Obsolete]
         public override void Initialized()
         {
             if (_isInitialized)
             {
-                Debug.LogWarning($"{GetType().Name}: Already initialized, skipping.", this);
                 return;
             }
 
             // Validate UI components
             if (loadingSlider == null)
             {
-                Debug.LogWarning($"{GetType().Name}: LoadingSlider is not assigned in the Inspector.", this);
+
             }
             if (loadingText == null)
             {
-                Debug.LogWarning($"{GetType().Name}: LoadingText is not assigned in the Inspector.", this);
+               
             }
 
             // Check UGS Authentication
@@ -117,7 +114,6 @@ namespace Trusense.Components.Views
         }
 
         // === Loading Logic ===
-        [System.Obsolete]
         private void StartLoading()
         {
             if (loadingCoroutine != null)
@@ -134,10 +130,9 @@ namespace Trusense.Components.Views
                 StopCoroutine(loadingCoroutine);
                 loadingCoroutine = null;
             }
-            DOTween.Kill(this); // Clean up all DOTween animations tagged with this instance
+            DOTween.Kill(this); 
         }
 
-        [System.Obsolete]
         private IEnumerator LoadProgress()
         {
             // Reset UI
@@ -163,17 +158,12 @@ namespace Trusense.Components.Views
             }
         }
 
-        [System.Obsolete]
         private void OnLoadingComplete()
         {
             if (ViewManager.Instance != null)
             {
                 ViewManager.Instance.ShowView<LobbyView>();
                 Hide();
-            }
-            else
-            {
-                Debug.LogError($"{GetType().Name}: ViewManager instance is null, cannot transition to LobbyView.", this);
             }
         }
 

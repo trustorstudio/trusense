@@ -1,10 +1,10 @@
-using DG.Tweening; // Imports DG.Tweening for smooth animation utilities.
-using UnityEngine; // Imports core Unity classes like MonoBehaviour and GameObject.
-using UnityEngine.UI; // Imports Unity UI classes like Button and RectTransform.
-using Trusense.Common; // Imports the View base class.
+using DG.Tweening;
+using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
-using Trusense.Managers; // Imports for IEnumerator support in HideAsync.
-namespace Trusense.Common // Namespace for shared, reusable UI components.
+using Trusense.Managers;
+
+namespace Trusense.Common
 {
     // === Class Header ===
     /// <summary>
@@ -17,10 +17,10 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
         // === Animation Settings ===
         [Header("Animation Settings")]
         [Tooltip("Duration (in seconds) for the popup show animation. Must be positive.")]
-        [SerializeField, Min(0.01f)] private float showDuration = 0.5f; // Duration for scaling from 0 to 1.
+        [SerializeField, Min(0.01f)] private float showDuration = 0.5f;
 
-        [Tooltip("Duration (in seconds) for the popup hide animation. Must be positive.")] // Tooltip for hideDuration.
-        [SerializeField, Min(0.01f)] private float hideDuration = 0.5f; // Duration for scaling from 1 to 0.
+        [Tooltip("Duration (in seconds) for the popup hide animation. Must be positive.")]
+        [SerializeField, Min(0.01f)] private float hideDuration = 0.5f;
 
         [Tooltip("Easing type for the show animation.")]
         [SerializeField] private Ease showEase = Ease.OutBack;
@@ -29,22 +29,21 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
         [SerializeField] private Ease hideEase = Ease.InBack;
 
         // === UI Components ===
-        [Header("UI Components")] // Groups UI component fields in the Unity Inspector.
-        [Tooltip("Reference to the Button that closes the popup.")] // Tooltip for CloseButton.
-        [SerializeField] private Button CloseButton; // Reference to the close button.
+        [Header("UI Components")]
+        [Tooltip("Reference to the Button that closes the popup.")]
+        [SerializeField] private Button closeButton;
 
-        [Tooltip("Reference to the RectTransform of the popup for scale animations.")] // Tooltip for PopupTransform.
-        [SerializeField] private RectTransform PopupTransform; // RectTransform for animations.
+        [Tooltip("Reference to the RectTransform of the popup for scale animations.")]
+        [SerializeField] private RectTransform popupTransform;
 
         // === Internal State ===
-        private new bool _isInitialized = false; // Tracks initialization state.
+        private new bool _isInitialized = false;
 
         // === Initialization Logic ===
         /// <summary>
         /// Initializes the popup by setting up the close button's click event.
         /// Overrides the abstract Initialize method from the View base class.
         /// </summary>
-        [System.Obsolete]
         public override void Initialized()
         {
             if (_isInitialized)
@@ -52,16 +51,16 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
                 return;
             }
 
-            if (CloseButton != null)
+            if (closeButton != null)
             {
                 if (PopupManager.Instance != null)
                 {
-                    CloseButton.onClick.RemoveAllListeners();
-                    CloseButton.onClick.AddListener(() => PopupManager.Instance.HidePopup());
+                    closeButton.onClick.RemoveAllListeners();
+                    closeButton.onClick.AddListener(() => PopupManager.Instance.HidePopup());
                 }
             }
 
-            _isInitialized = true; // Marks the popup as initialized.
+            _isInitialized = true;
         }
 
         // === Cleanup Logic ===
@@ -71,12 +70,12 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
         /// </summary>
         public override void Clean()
         {
-            if (CloseButton != null)
+            if (closeButton != null)
             {
-                CloseButton.onClick.RemoveAllListeners(); // Removes listeners to prevent memory leaks.
+                closeButton.onClick.RemoveAllListeners(); // Removes listeners to prevent memory leaks.
             }
 
-            if (PopupTransform != null)
+            if (popupTransform != null)
             {
                 DOTween.Kill(this); // Stops only animations tagged with this instance.
             }
@@ -104,21 +103,20 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
                 Initialized();
             }
 
-            if (_isVisible) return; // Skip if already visible (inherited from View).
+            if (_isVisible) return; 
 
-            if (PopupTransform == null)
+            if (popupTransform == null)
             {
-                Debug.LogError($"{GetType().Name}: PopupTransform is not assigned in the Inspector.", this);
-                gameObject.SetActive(true); // Activate GameObject for visibility.
-                _isVisible = true; // Update visibility state.
+                gameObject.SetActive(true); 
+                _isVisible = true; 
                 // OnShown?.Invoke(); // Notify listeners after state change (valid in Popup).
                 return;
             }
 
             DOTween.Kill(this); // Stops any existing animations to avoid conflicts.
             gameObject.SetActive(true); // Activates GameObject for visibility.
-            PopupTransform.localScale = Vector3.zero; // Sets initial scale for animation.
-            PopupTransform.DOScale(Vector3.one, showDuration) // Animates to full scale.
+            popupTransform.localScale = Vector3.zero; // Sets initial scale for animation.
+            popupTransform.DOScale(Vector3.one, showDuration) // Animates to full scale.
                 .SetEase(showEase) // Applies custom easing.
                 .SetId(this) // Tags animation for cleanup.
                 .OnComplete(() =>
@@ -136,7 +134,7 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
         public override void Hide()
         {
             if (!_isVisible) return;
-            if (PopupTransform == null)
+            if (popupTransform == null)
             {
                 gameObject.SetActive(false);
                 _isVisible = false;
@@ -145,7 +143,7 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
             }
 
             DOTween.Kill(this);
-            PopupTransform.DOScale(Vector3.zero, hideDuration)
+            popupTransform.DOScale(Vector3.zero, hideDuration)
                 .SetEase(hideEase)
                 .SetId(this)
                 .OnComplete(() =>
@@ -165,9 +163,8 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
         {
             if (!_isVisible) yield break; // Skip if already hidden.
 
-            if (PopupTransform == null)
+            if (popupTransform == null)
             {
-                Debug.LogError($"{GetType().Name}: PopupTransform is not assigned in the Inspector.", this);
                 gameObject.SetActive(false); // Deactivate GameObject.
                 _isVisible = false; // Update visibility state.
                 // OnHidden?.Invoke(); // Notify listeners (valid in Popup).
@@ -175,7 +172,7 @@ namespace Trusense.Common // Namespace for shared, reusable UI components.
             }
 
             DOTween.Kill(this); // Stops any existing animations.
-            yield return PopupTransform.DOScale(Vector3.zero, hideDuration) // Animates to zero scale.
+            yield return popupTransform.DOScale(Vector3.zero, hideDuration) // Animates to zero scale.
                 .SetEase(hideEase) // Applies custom easing.
                 .SetId(this) // Tags animation for cleanup.
                 .WaitForCompletion();

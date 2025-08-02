@@ -28,7 +28,6 @@ namespace Trusense.Components.Views
         /// Initializes the TitleView.
         /// This method should set up any necessary references or initial state for the TitleView.
         /// </summary>
-        [System.Obsolete]
         public override void Initialized()
         {
             if (_isInitialized)
@@ -70,25 +69,17 @@ namespace Trusense.Components.Views
         public override void Clean()
         {
             if (startButton != null)
-            {
                 startButton.onClick.RemoveAllListeners();
-            }
-
             if (accountButton != null)
-            {
                 accountButton.onClick.RemoveAllListeners();
-            }
-
             if (facebookButton != null)
-            {
                 facebookButton.onClick.RemoveAllListeners();
-            }
         }
 
 
         private void OnStartButton()
         {
-
+            ViewManager.Instance.ShowView<LobbyView>();
         }
 
         [System.Obsolete]

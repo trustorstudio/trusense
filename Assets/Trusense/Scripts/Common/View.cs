@@ -9,16 +9,16 @@ namespace Trusense.Common
     public abstract class View : MonoBehaviour
     {
         // === Configuration ===
-        [Header("View Configuration")] // Groups configuration fields in the Unity Inspector.
-        [Tooltip("If true, the view initializes automatically on Awake.")] // Tooltip for autoInitialize.
-        [SerializeField] protected bool autoInitialize = true; // Controls automatic initialization.
+        [Header("View Configuration")]
+        [Tooltip("If true, the view initializes automatically on Awake.")]
+        [SerializeField] protected bool autoInitialize = true;
 
-        [Tooltip("If true, the view is hidden by default on Start.")] // Tooltip for startHidden.
-        [SerializeField] protected bool startHidden = true; // Controls default visibility.
+        [Tooltip("If true, the view is hidden by default on Start.")]
+        [SerializeField] protected bool startHidden = true;
 
         // === Internal State ===
-        protected bool _isInitialized = false; // Tracks initialization state.
-        protected bool _isVisible = false; // Tracks visibility state.
+        protected bool _isInitialized = false;
+        protected bool _isVisible = true;
 
         // === Events ===
         /// <summary>
@@ -57,10 +57,19 @@ namespace Trusense.Common
         /// </summary>
         public virtual void Hide()
         {
-            if (!_isVisible) return; // Skip if already hidden.
+            if (!_isVisible)
+            {
+                Debug.Log($"View {name} is already hidden.", this);
+                return;
+            }
+            Debug.Log($"Hiding {name}, setting active to false.", this);
             this.gameObject.SetActive(false);
             _isVisible = false;
-            OnHidden?.Invoke(); // Notify listeners.
+            OnHidden?.Invoke();
+            if (gameObject.activeSelf)
+            {
+                Debug.LogWarning($"View {name} is still active after Hide!", this);
+            }
         }
 
         /// <summary>
@@ -75,23 +84,14 @@ namespace Trusense.Common
                 Initialized();
                 _isInitialized = true;
             }
-            if (_isVisible) return; // Skip if already visible.
+            if (_isVisible) return;
+            if (!gameObject.activeInHierarchy)
+            {
+                Debug.LogWarning($"View {name} is not active in hierarchy. Check parent GameObjects.", this);
+            }
             this.gameObject.SetActive(true);
             _isVisible = true;
-            OnShown?.Invoke(); // Notify listeners.
-        }
-
-        // === Unity Lifecycle ===
-        /// <summary>
-        /// Automatically initializes the view if autoInitialize is enabled.
-        /// </summary>
-        protected virtual void Awake()
-        {
-            if (autoInitialize)
-            {
-                Initialized();
-                _isInitialized = true;
-            }
+            OnShown?.Invoke();
         }
 
         /// <summary>
@@ -99,6 +99,11 @@ namespace Trusense.Common
         /// </summary>
         protected virtual void Start()
         {
+            if (autoInitialize)
+            {
+                Initialized();
+                _isInitialized = true;
+            }
             if (startHidden)
             {
                 Hide();
@@ -126,7 +131,7 @@ namespace Trusense.Common
         /// </summary>
         protected virtual bool IsVisible()
         {
-            return this.gameObject.activeSelf;
+            return gameObject.activeSelf;
         }
     }
 }

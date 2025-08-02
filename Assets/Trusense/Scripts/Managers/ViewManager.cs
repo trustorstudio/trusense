@@ -24,8 +24,8 @@ namespace Trusense.Managers
         [Header("Internal State")]
         [Tooltip("Stack of previously shown views for navigation history.")]
         [SerializeField] private Stack<View> historiesView = new Stack<View>();
-        private View currentView;
-        private Dictionary<Type, View> viewCache = new Dictionary<Type, View>();
+        [SerializeField] private View currentView;
+        private readonly Dictionary<Type, View> viewCache = new Dictionary<Type, View>();
 
         /// <summary>
         /// Event triggered when the current view changes.
@@ -35,12 +35,7 @@ namespace Trusense.Managers
         /// <summary>
         /// Initializes all views, builds the view cache, and shows the start view.
         /// </summary>
-        protected void Start()
-        {
-            Initialized();
-        }
-
-        private void Initialized()
+        private void Start()
         {
             if (views == null || views.Length == 0)
             {
@@ -48,7 +43,7 @@ namespace Trusense.Managers
             }
 
             viewCache.Clear();
-            foreach (View view in views)
+            foreach (var view in views)
             {
                 if (view == null)
                 {
@@ -69,7 +64,6 @@ namespace Trusense.Managers
             }
         }
 
-
         /// <summary>
         /// Retrieves a view of the specified type from the cache.
         /// </summary>
@@ -77,6 +71,7 @@ namespace Trusense.Managers
         /// <returns>The view of type T, or null if not found.</returns>
         public T GetView<T>() where T : View
         {
+            if (this == null) return null;
             if (viewCache.TryGetValue(typeof(T), out View view))
             {
                 return view as T;
@@ -89,7 +84,6 @@ namespace Trusense.Managers
         /// </summary>
         /// <typeparam name="T">The type of view to show.</typeparam>
         /// <param name="remember">Whether to add the current view to history.</param>
-        [Obsolete]
         public void ShowView<T>(bool remember = true) where T : View
         {
             T view = GetView<T>();
@@ -104,7 +98,6 @@ namespace Trusense.Managers
         /// </summary>
         /// <param name="view">The view to show.</param>
         /// <param name="remember">Whether to add the current view to history.</param>
-        [Obsolete]
         public void ShowView(View view, bool remember = true)
         {
             if (view == null)
@@ -112,7 +105,7 @@ namespace Trusense.Managers
                 return;
             }
 
-            PopupManager.Instance.HideAllPopups();
+            // PopupManager.Instance.HideAllPopups();
 
             if (currentView != null && currentView != view)
             {

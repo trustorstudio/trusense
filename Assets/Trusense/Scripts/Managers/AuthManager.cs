@@ -41,24 +41,17 @@ namespace Trusense.Managers
         // === Properties ===
         public bool IsLoggedIn => AuthenticationService.Instance.IsSignedIn;
 
-        // === Lifecycle Methods ===
-        protected override void Awake()
-        {
-            base.Awake();
-            _ = Initialized();
-        }
-
         // === Initialization Logic ===
         /// <summary>
         /// Initializes Unity Services and sets up authentication event listeners.
         /// </summary>
-        private async Task Initialized()
+        protected async override void Awake()
         {
+            base.Awake();
             if (isInitialized)
             {
                 return;
             }
-
             try
             {
                 var options = new InitializationOptions();
@@ -81,10 +74,9 @@ namespace Trusense.Managers
 
                 isInitialized = true;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug.LogError($"{GetType().Name}: Failed to initialize Unity Services: {ex.Message}");
-                isInitialized = false;
+                Debug.LogException(e);
             }
         }
 
@@ -100,7 +92,7 @@ namespace Trusense.Managers
         {
             if (!isInitialized)
             {
-                await Initialized();
+                // await Initialized();
                 if (!isInitialized)
                 {
                     throw new InvalidOperationException("Unity Services initialization failed.");
@@ -148,7 +140,7 @@ namespace Trusense.Managers
         {
             if (!isInitialized)
             {
-                await Initialized();
+                // await Initialized();
                 if (!isInitialized)
                 {
                     throw new InvalidOperationException("Unity Services initialization failed.");

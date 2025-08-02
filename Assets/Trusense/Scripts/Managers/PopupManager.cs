@@ -20,7 +20,7 @@ namespace Trusense.Managers
 
         [Header("Internal State")]
         [Tooltip("Stack of previously shown popups for navigation history.")]
-        [SerializeField] private Stack<Popup> HistoryPopups = new Stack<Popup>();
+        [SerializeField] private Stack<Popup> historyPopups = new Stack<Popup>();
 
         private Popup CurrentPopup;
         private Dictionary<Type, Popup> popupCache = new Dictionary<Type, Popup>();
@@ -112,7 +112,7 @@ namespace Trusense.Managers
             {
                 if (remember)
                 {
-                    HistoryPopups.Push(CurrentPopup);
+                    historyPopups.Push(CurrentPopup);
                 }
                 if (hide)
                 {
@@ -132,7 +132,6 @@ namespace Trusense.Managers
         {
             if (CurrentPopup == null)
             {
-                Debug.LogWarning($"{GetType().Name}: No current popup to hide.");
                 return;
             }
 
@@ -140,9 +139,9 @@ namespace Trusense.Managers
             Popup previousPopup = CurrentPopup;
             CurrentPopup = null;
 
-            if (HistoryPopups.Count > 0)
+            if (historyPopups.Count > 0)
             {
-                Popup lastPopup = HistoryPopups.Pop();
+                Popup lastPopup = historyPopups.Pop();
                 if (lastPopup != null)
                 {
                     ShowPopup(lastPopup, false);
@@ -166,14 +165,14 @@ namespace Trusense.Managers
                 CurrentPopup = null;
             }
 
-            foreach (Popup popup in HistoryPopups)
+            foreach (Popup popup in historyPopups)
             {
                 if (popup != null && popup.gameObject.activeSelf)
                 {
                     popup.Hide();
                 }
             }
-            HistoryPopups.Clear();
+            historyPopups.Clear();
             OnPopupChanged?.Invoke(null);
         }
 
