@@ -22,18 +22,16 @@ namespace Trusense.Managers
         [Header("Authentication Status")]
         [Tooltip("Indicates if the player is currently signed in.")]
         [SerializeField, ReadOnly] private bool isLoggedIn;
-
-
         // === Events ===
-        // [Header("Authentication Events")]
         [Tooltip("Event triggered when the player successfully signs in.")]
-        public event Action<string> OnSignedIn; // Passes Player ID
-
+        public event Action<string> OnSignedIn;
         [Tooltip("Event triggered when sign-in fails.")]
-        public event Action<string> OnSignInFailed; // Passes error message
+        public event Action<string> OnSignInFailed;
 
         [Tooltip("Event triggered when the player signs out.")]
         public event Action OnSignedOut;
+        [Tooltip("Event triggered when the player previous sign in.")]
+        public Action OnAuthAction;
 
         // === Internal State ===
         private bool isInitialized;

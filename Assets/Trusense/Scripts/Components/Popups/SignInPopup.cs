@@ -172,7 +172,7 @@ namespace Trusense.Components.Popups
         private void OnSignupButton()
         {
             // AudioManager.Instance.PlayButtonClickSound();
-            PopupManager.Instance.ShowPopup<SignUpPopup>(true, true);
+            PopupManager.Instance.Show<SignUpPopup>(true, true);
         }
 
         /// <summary>

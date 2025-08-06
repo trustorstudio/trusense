@@ -86,12 +86,12 @@ namespace Trusense.Managers
         /// <typeparam name="Template">The type of popup to show.</typeparam>
         /// <param name="remember">Whether to add the current popup to history.</param>
         /// <param name="hide">Whether to hide the current popup.</param>
-        public void ShowPopup<Template>(bool remember = true, bool hide = false) where Template : Popup
+        public void Show<Template>(bool remember = true, bool hide = false) where Template : Popup
         {
             Template popup = GetPopup<Template>();
             if (popup != null)
             {
-                ShowPopup(popup, remember, hide);
+                Show(popup, remember, hide);
             }
         }
 
@@ -101,7 +101,7 @@ namespace Trusense.Managers
         /// <param name="popup">The popup to show.</param>
         /// <param name="remember">Whether to add the current popup to history.</param>
         /// <param name="hide">Whether to hide the current popup.</param>
-        public void ShowPopup(Popup popup, bool remember = true, bool hide = false)
+        public void Show(Popup popup, bool remember = true, bool hide = false)
         {
             if (popup == null)
             {
@@ -144,7 +144,7 @@ namespace Trusense.Managers
                 Popup lastPopup = historyPopups.Pop();
                 if (lastPopup != null)
                 {
-                    ShowPopup(lastPopup, false);
+                    Show(lastPopup, false);
                 }
 
 

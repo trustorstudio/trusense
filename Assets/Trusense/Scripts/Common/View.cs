@@ -59,17 +59,12 @@ namespace Trusense.Common
         {
             if (!_isVisible)
             {
-                Debug.Log($"View {name} is already hidden.", this);
+
                 return;
             }
-            Debug.Log($"Hiding {name}, setting active to false.", this);
             this.gameObject.SetActive(false);
             _isVisible = false;
             OnHidden?.Invoke();
-            if (gameObject.activeSelf)
-            {
-                Debug.LogWarning($"View {name} is still active after Hide!", this);
-            }
         }
 
         /// <summary>

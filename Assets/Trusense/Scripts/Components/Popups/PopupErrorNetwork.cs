@@ -78,7 +78,7 @@ namespace Trusense.Components.Popups
                 {
                     if (!_isVisible)
                     {
-                        PopupManager.Instance.ShowPopup(this);
+                        PopupManager.Current.Show(this);
                         if (errorTitleText != null && errorTitleText.text != defaultErrorTitle)
                         {
                             errorTitleText.text = defaultErrorTitle;
@@ -93,7 +93,7 @@ namespace Trusense.Components.Popups
                 else if (_isVisible)
                 {
 
-                    PopupManager.Instance.HidePopup();
+                    PopupManager.Current.HidePopup();
                 }
             }
         }
