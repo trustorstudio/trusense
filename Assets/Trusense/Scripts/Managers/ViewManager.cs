@@ -24,7 +24,8 @@ namespace Trusense.Managers
         [Header("Internal State")]
         [Tooltip("Stack of previously shown views for navigation history.")]
         [SerializeField] private Stack<View> historiesView = new Stack<View>();
-        [SerializeField] private View currentView;
+
+        private View currentView;
         private readonly Dictionary<Type, View> viewCache = new Dictionary<Type, View>();
 
         /// <summary>

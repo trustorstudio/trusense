@@ -81,17 +81,16 @@ namespace Trusense.Components.Views
             }
             else
             {
-                if (CheckPrivacy())
+                if (GameManager.Current.CheckPrivacy())
                 {
-                    System.Action onAuthAction = null;
-                    onAuthAction = async () =>
+                    static async void hanldeAuthAction()
                     {
-                        AuthManager.Current.OnAuthAction -= onAuthAction;
+                        AuthManager.Current.OnAuthAction -= hanldeAuthAction;
                         await AuthManager.Current.SignIn();
                         ViewManager.Current.Show<LoadingView>();
-                    };
+                    }
 
-                    AuthManager.Current.OnAuthAction += onAuthAction;
+                    AuthManager.Current.OnAuthAction += hanldeAuthAction;
                     AuthManager.Current.OnAuthAction?.Invoke();
                 }
                 else
@@ -118,15 +117,5 @@ namespace Trusense.Components.Views
         {
 
         }
-
-        /// <summary>
-        /// Checks if the privacy policy has been accepted.
-        /// </summary>
-        /// <returns>True if the privacy policy is accepted, false otherwise.</returns>
-        private bool CheckPrivacy()
-        {
-            return PlayerPrefs.GetInt(Keys.PRIVACY, 0) == 1;
-        }
-
     }
 }
