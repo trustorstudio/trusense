@@ -157,8 +157,7 @@ namespace Trusense.Components.Popups
             {
                 if (ViewManager.Instance != null)
                 {
-                    ViewManager.Instance.ShowView<LoadingView>();
-                    Hide();
+                    ViewManager.Instance.Show<LoadingView>();
                 }
             }
             catch (System.Exception exception)

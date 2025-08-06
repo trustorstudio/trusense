@@ -60,7 +60,7 @@ namespace Trusense.Managers
 
             if (startView != null)
             {
-                ShowView(startView);
+                Show(startView);
             }
         }
 
@@ -84,12 +84,13 @@ namespace Trusense.Managers
         /// </summary>
         /// <typeparam name="T">The type of view to show.</typeparam>
         /// <param name="remember">Whether to add the current view to history.</param>
-        public void ShowView<T>(bool remember = true) where T : View
+        public void Show<T>(bool remember = true) where T : View
         {
             T view = GetView<T>();
             if (view != null)
             {
-                ShowView(view, remember);
+                Show(view, remember);
+
             }
         }
 
@@ -98,14 +99,15 @@ namespace Trusense.Managers
         /// </summary>
         /// <param name="view">The view to show.</param>
         /// <param name="remember">Whether to add the current view to history.</param>
-        public void ShowView(View view, bool remember = true)
+        public void Show(View view, bool remember = true)
         {
             if (view == null)
             {
+                Debug.LogWarning("Attempted to show a null view.", this);
                 return;
             }
 
-            // PopupManager.Instance.HideAllPopups();
+            PopupManager.Instance.HideAllPopups();
 
             if (currentView != null && currentView != view)
             {
@@ -124,7 +126,7 @@ namespace Trusense.Managers
         /// <summary>
         /// Shows the last view in the history stack, if available.
         /// </summary>
-        public void ShowLastView()
+        public void ShowLast()
         {
             if (historiesView.Count == 0)
             {
@@ -134,7 +136,7 @@ namespace Trusense.Managers
             View lastView = historiesView.Pop();
             if (lastView != null)
             {
-                ShowView(lastView, false);
+                Show(lastView, false);
             }
         }
 

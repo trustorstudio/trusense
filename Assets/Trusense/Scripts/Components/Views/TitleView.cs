@@ -79,7 +79,7 @@ namespace Trusense.Components.Views
 
         private void OnStartButton()
         {
-            ViewManager.Instance.ShowView<LobbyView>();
+            ViewManager.Instance.Show<LobbyView>();
         }
 
         [System.Obsolete]

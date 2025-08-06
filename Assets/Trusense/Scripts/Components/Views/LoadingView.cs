@@ -69,7 +69,7 @@ namespace Trusense.Components.Views
             }
             if (loadingText == null)
             {
-               
+
             }
 
             // Check UGS Authentication
@@ -130,7 +130,7 @@ namespace Trusense.Components.Views
                 StopCoroutine(loadingCoroutine);
                 loadingCoroutine = null;
             }
-            DOTween.Kill(this); 
+            DOTween.Kill(this);
         }
 
         private IEnumerator LoadProgress()
@@ -162,8 +162,7 @@ namespace Trusense.Components.Views
         {
             if (ViewManager.Instance != null)
             {
-                ViewManager.Instance.ShowView<LobbyView>();
-                Hide();
+                ViewManager.Instance.Show<LobbyView>();
             }
         }
 
