@@ -1,4 +1,6 @@
+using TMPro;
 using Trusense.Common;
+using Trusense.Constants;
 using Trusense.Managers;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,8 +21,12 @@ namespace Trusense.Components.Popups
     {
         // === UI Button Components ===
         [Header("UI Button Components")]
+        [Tooltip("Image component to visually represent the language setting.")]
+        [SerializeField] private Image languageImage;
         [Tooltip("The button that opens the language settings.")]
         [SerializeField] private Button languageButton;
+        [Tooltip("Text component to display the current language setting.")]
+        [SerializeField] private TMP_Text languageText;
 
         /// <summary>
         /// Initializes the popup settings.
@@ -36,6 +42,9 @@ namespace Trusense.Components.Popups
                 languageButton.onClick.AddListener(HandleLanguage);
             }
 
+            EventManager.Current.OnLanguageChanged.RemoveListener(UpdateLanguage);
+            EventManager.Current.OnLanguageChanged.AddListener(UpdateLanguage);
+
         }
 
         /// <summary>
@@ -48,7 +57,7 @@ namespace Trusense.Components.Popups
             {
                 languageButton.onClick.RemoveListener(HandleLanguage);
             }
-
+            EventManager.Current.OnLanguageChanged.RemoveListener(UpdateLanguage);
             base.Clean();
         }
 
@@ -59,6 +68,31 @@ namespace Trusense.Components.Popups
         private void HandleLanguage()
         {
             PopupManager.Current.Show<PopupSettingLanguage>();
+        }
+
+
+        /// <summary>
+        /// Updates the language settings in the popup.
+        /// This method can be called to refresh the language display based on the current settings.
+        /// </summary>
+        /// <param name="language"></param>
+        private void UpdateLanguage(string language)
+        {
+            if (string.IsNullOrEmpty(language))
+            {
+                language = "english";
+            }
+
+            if (languageImage != null)
+            {
+                Sprite sprite = Resources.Load<Sprite>($"Flags/{language}");
+                languageImage.sprite = sprite ?? Resources.Load<Sprite>("Flags/english");
+            }
+
+            if (languageText != null)
+            {
+                languageText.text = language.ToUpper();
+            }
         }
     }
 }

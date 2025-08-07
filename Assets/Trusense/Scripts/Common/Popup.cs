@@ -58,10 +58,10 @@ namespace Trusense.Common
 
             if (closeButton != null)
             {
-                if (PopupManager.Instance != null)
+                if (PopupManager.Current != null)
                 {
                     closeButton.onClick.RemoveAllListeners();
-                    closeButton.onClick.AddListener(() => PopupManager.Instance.HidePopup());
+                    closeButton.onClick.AddListener(() => PopupManager.Current.HidePopup());
                 }
             }
 

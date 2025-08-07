@@ -1,6 +1,7 @@
 using UnityEngine;
 using Trusense.Common;
 using System.Collections.Generic;
+using System;
 
 namespace Trusense.Components.Popups
 {
@@ -20,6 +21,7 @@ namespace Trusense.Components.Popups
         [Header("UI Components")]
         [Tooltip("Button to change the language settings.")]
         [SerializeField] private List<Flag> flags;
+
         /// <summary>
         /// Initializes the popup settings for language selection.
         /// This method can be overridden to set up specific settings for the language popup.
@@ -28,7 +30,18 @@ namespace Trusense.Components.Popups
         {
             if (_isInitialized) return;
             base.Initialized();
-            // Additional initialization logic for language settings can be added here
+
+            if (flags == null || flags.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var flag in flags)
+            {
+                flag.OnFlagSelected.RemoveAllListeners();
+                flag.OnFlagSelected.AddListener(SelectFlag);
+                flag.Load();
+            }
         }
 
         /// <summary>
@@ -37,8 +50,26 @@ namespace Trusense.Components.Popups
         /// </summary>
         public override void Clean()
         {
-            // Cleanup logic for language settings can be added here
+            foreach (var flag in flags)
+            {
+                flag.Save();
+                flag.OnFlagSelected.RemoveAllListeners();
+            }
             base.Clean();
+        }
+
+        /// <summary>
+        /// Selects a flag and updates the selection state.
+        /// This method is called when a flag is selected, and it updates the selection state of the flags.
+        /// It also saves the selected language to PlayerPrefs.
+        /// </summary>
+        /// <param name="selectedFlag"></param>
+        public void SelectFlag(Flag selectedFlag)
+        {
+            foreach (var flag in flags)
+            {
+                flag.SetSelected(flag == selectedFlag);
+            }
         }
     }
 }

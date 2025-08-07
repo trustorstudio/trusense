@@ -2,6 +2,7 @@ using System;
 using Trusense.Constants;
 using Trusense.Tools;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Trusense.Managers
 {
@@ -16,6 +17,25 @@ namespace Trusense.Managers
 
     public class GameManager : Singleton<GameManager>
     {
+        // === Handle Language Settings ===
+        public void SetLanguage(string language)
+        {
+            PlayerPrefs.SetString(Keys.LANGUAGE, language);
+            PlayerPrefs.Save();
+            EventManager.Current.OnLanguageChanged.Invoke(language);
+        }
+
+        public string GetLanguage()
+        {
+            return PlayerPrefs.GetString(Keys.LANGUAGE, "English");
+        }
+
+        public void ClearLanguage()
+        {
+            PlayerPrefs.DeleteKey(Keys.LANGUAGE);
+            PlayerPrefs.Save();
+            EventManager.Current.OnLanguageChanged.Invoke("");
+        }
 
         // === Handle Privacy Policy
         /// <summary>

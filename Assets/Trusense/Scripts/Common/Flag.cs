@@ -1,4 +1,7 @@
+using Trusense.Constants;
+using Trusense.Managers;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Trusense.Common
@@ -13,7 +16,7 @@ namespace Trusense.Common
     /// Last Modified: August 6, 2025
     /// Version: 1.0.0
     /// </summary>
-    public class Flag : View
+    public class Flag : MonoBehaviour
     {
         // === UI Components ===
         [Header("UI Components")]
@@ -24,8 +27,12 @@ namespace Trusense.Common
         [Tooltip("Button to handle selection of the flag.")]
         [SerializeField] private Button buttonLanguage;
         [Tooltip("The language associated with the flag, used for localization.")]
-        [SerializeField] private string language;
+        [SerializeField] private string language = "English";
 
+        // === Events ===
+        [Header("Events")]
+        [Tooltip("Optional popup to display additional information or options related to the flag.")]
+        public UnityEvent<Flag> OnFlagSelected = new UnityEvent<Flag>();
 
 
         // === Properties ===
@@ -67,23 +74,13 @@ namespace Trusense.Common
             }
         }
 
-        public override void Clean()
-        {
-            if (checkIcon != null)
-            {
-                checkIcon.gameObject.SetActive(false);
-            }
-            if (buttonLanguage != null)
-            {
-                buttonLanguage.onClick.RemoveListener(HandleSelect);
-            }
-        }
+
 
         /// <summary>
         /// Initializes the Flag component.
         /// This method can be overridden to set up specific settings for the flag.
         /// </summary>
-        public override void Initialized()
+        public void Start()
         {
             if (flagImage != null)
             {
@@ -98,49 +95,76 @@ namespace Trusense.Common
                 buttonLanguage.onClick.RemoveAllListeners();
                 buttonLanguage.onClick.AddListener(HandleSelect);
             }
+            Load();
         }
 
-
-        private void HandleSelect()
+        /// <summary>
+        /// Cleans up resources when the Flag component is destroyed.
+        /// This method is called when the GameObject is destroyed or when the component is removed.
+        /// </summary>
+        private void OnDestroy()
         {
-            isSelected = !isSelected;
-            checkIcon.gameObject.SetActive(isSelected); // Hiển thị/ẩn Icon Check
-            SaveState();
-        }
-
-
-        public void SaveState()
-        {
-            // Lưu trạng thái chọn (bool) vào PlayerPrefs
-            PlayerPrefs.SetInt($"Flag_{languageName}_Selected", isSelected ? 1 : 0);
-
-            // Lưu tên Sprite (nếu có)
-            if (flagSprite != null)
-                PlayerPrefs.SetString($"Flag_{languageName}_Sprite", flagSprite.name);
-
-            PlayerPrefs.Save(); // Lưu thay đổi
-        }
-
-        public void LoadState()
-        {
-            // Tải trạng thái chọn từ PlayerPrefs
-            isSelected = PlayerPrefs.GetInt($"Flag_{languageName}_Selected", 0) == 1;
-            checkIcon.gameObject.SetActive(isSelected); // Cập nhật giao diện
-
-            // (Tùy chọn) Kiểm tra tên Sprite (nếu cần khôi phục)
-            string savedSpriteName = PlayerPrefs.GetString($"Flag_{languageName}_Sprite", "");
-            if (!string.IsNullOrEmpty(savedSpriteName) && flagSprite != null && flagSprite.name != savedSpriteName)
+            if (checkIcon != null)
             {
-                Debug.LogWarning($"Sprite cho {languageName} không khớp: {savedSpriteName}");
+                checkIcon.gameObject.SetActive(false);
+            }
+            if (buttonLanguage != null)
+            {
+                buttonLanguage.onClick.RemoveListener(HandleSelect);
             }
         }
 
-        // (Tùy chọn) Hàm để đặt trạng thái từ bên ngoài (dùng cho single-selection)
+        /// <summary>
+        /// Handles the selection of the flag.
+        /// This method is called when the button associated with the flag is clicked.  
+        /// </summary>
+        private void HandleSelect()
+        {
+            OnFlagSelected.Invoke(this);
+        }
+
+        /// <summary>
+        /// Saves the current selection state of the flag to PlayerPrefs.
+        /// This method is called to persist the selected language in PlayerPrefs.
+        /// </summary>
+        public void Save()
+        {
+            if (isSelected)
+            {
+                GameManager.Current.SetLanguage(language);
+            }
+            else if (GameManager.Current.GetLanguage() == language)
+            {
+                GameManager.Current.ClearLanguage();
+            }
+        }
+
+        /// <summary>
+        /// Loads the selection state of the flag from PlayerPrefs. 
+        /// This method is called to initialize the flag's selection state based on previously saved preferences.
+        /// </summary>
+        public void Load()
+        {
+            isSelected = GameManager.Current.GetLanguage() == language;
+            if (checkIcon != null)
+            {
+                checkIcon.gameObject.SetActive(isSelected);
+            }
+        }
+
+        /// <summary>
+        /// Sets the selection state of the flag.
+        /// This method updates the selection state of the flag and saves it to PlayerPrefs.    
+        /// </summary>
+        /// <param name="selected"></param>
         public void SetSelected(bool selected)
         {
             isSelected = selected;
-            checkIcon.gameObject.SetActive(isSelected);
-            SaveState();
+            if (checkIcon != null)
+            {
+                checkIcon.gameObject.SetActive(isSelected);
+            }
+            Save();
         }
     }
 }
