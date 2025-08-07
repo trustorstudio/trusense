@@ -1,5 +1,6 @@
 using TMPro;
 using Trusense.Common;
+using Trusense.Components.Popups;
 using Trusense.Managers;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,10 @@ namespace Trusense.Components.Views
         [SerializeField] private Button energyButton;
         [Tooltip("Text to display the current energy.")]
         [SerializeField] private TMP_Text energyText;
+        // === UI Components Settings ===
+        [Header("UI Components Settings")]
+        [Tooltip("Button to open the settings UI.")]
+        [SerializeField] private Button settingButton;
 
         // === UI Components Gold ===
         [Header("UI Components Gold")]
@@ -34,7 +39,7 @@ namespace Trusense.Components.Views
         [SerializeField] private Button diamondButton;
         [Tooltip("Button to open the energy shop UI.")]
 
-        [SerializeField] private Button settingButton;
+
 
         /// <summary>
         /// Initializes the LobbyView.
@@ -52,8 +57,16 @@ namespace Trusense.Components.Views
                 shopButton.onClick.RemoveAllListeners();
                 shopButton.onClick.AddListener(HandleShop);
             }
-            Debug.Log(EnergyManager.Current.CurrentEnergy);
-            EnergyManager.Current.OnEnergyChanged += UpdateEnergy;
+            if (settingButton != null)
+            {
+                settingButton.onClick.RemoveAllListeners();
+                settingButton.onClick.AddListener(HandleSetting);
+            }
+            
+            if (EnergyManager.Current != null)
+            {
+                EnergyManager.Current.OnEnergyChanged += UpdateEnergy;
+            }
         }
 
         /// <summary>
@@ -65,6 +78,10 @@ namespace Trusense.Components.Views
             if (shopButton != null)
             {
                 shopButton.onClick.RemoveListener(HandleShop);
+            }
+            if (settingButton != null)
+            {
+                settingButton.onClick.RemoveListener(HandleSetting);
             }
 
             if (EnergyManager.Current != null)
@@ -123,6 +140,11 @@ namespace Trusense.Components.Views
         private void HandleShop()
         {
 
+        }
+
+        private void HandleSetting()
+        {
+            PopupManager.Current.Show<PopupSetting>();
         }
     }
 }

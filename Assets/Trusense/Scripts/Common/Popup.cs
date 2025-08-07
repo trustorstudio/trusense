@@ -11,6 +11,11 @@ namespace Trusense.Common
     /// Popup class inherits from View, representing a UI popup with animated show/hide behavior.
     /// Manages a popup with a close button and scale animations using DOTween.
     /// Integrates with PopupManager for visibility control.
+    /// 
+    /// Author: Nguyễn Duy Khánh
+    /// Created: August 6, 2025
+    /// Last Modified: August 6, 2025
+    /// Version: 1.0.0
     /// </summary>
     public class Popup : View
     {
@@ -103,12 +108,12 @@ namespace Trusense.Common
                 Initialized();
             }
 
-            if (_isVisible) return; 
+            if (_isVisible) return;
 
             if (popupTransform == null)
             {
-                gameObject.SetActive(true); 
-                _isVisible = true; 
+                gameObject.SetActive(true);
+                _isVisible = true;
                 // OnShown?.Invoke(); // Notify listeners after state change (valid in Popup).
                 return;
             }

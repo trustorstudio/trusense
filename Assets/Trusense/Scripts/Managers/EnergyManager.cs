@@ -47,7 +47,6 @@ namespace Trusense.Managers
             if (maxEnergy <= 0)
                 maxEnergy = 60;
 
-
             currentEnergy = PlayerPrefs.GetInt(Keys.CURRENT_ENERGY, maxEnergy);
             nextEnergyTime = ParseDateTime(PlayerPrefs.GetString(Keys.NEXT_ENERGY_TIME), DateTime.Now.AddMinutes(restoreDuration));
             lastEnergyTime = ParseDateTime(PlayerPrefs.GetString(Keys.LAST_ENERGY_TIME), DateTime.Now);
@@ -174,10 +173,33 @@ namespace Trusense.Managers
             {
                 isRestoring = true;
                 nextEnergyTime = DateTime.Now.AddMinutes(restoreDuration);
-                if (restoreCoroutine == null)
-                {
-                    restoreCoroutine = StartCoroutine(RestoreCoroutine());
-                }
+                restoreCoroutine ??= StartCoroutine(RestoreCoroutine());
+            }
+        }
+
+        /// <summary>
+        /// Adds a specified amount of energy.
+        /// This method increases the current energy by the specified amount, ensuring it does not exceed the maximum energy.
+        /// It also checks if energy restoration should start if the current energy is below the maximum.
+        /// </summary>
+        /// <param name="amount"></param>
+        public void Add(int amount)
+        {
+            if (amount <= 0 || currentEnergy >= maxEnergy)
+            {
+                return;
+            }
+
+            currentEnergy = Mathf.Min(currentEnergy + amount, maxEnergy);
+            Save();
+            OnEnergyChanged?.Invoke(currentEnergy);
+
+
+            if (!isRestoring && currentEnergy < maxEnergy)
+            {
+                isRestoring = true;
+                nextEnergyTime = DateTime.Now.AddMinutes(restoreDuration);
+                restoreCoroutine ??= StartCoroutine(RestoreCoroutine());
             }
         }
 

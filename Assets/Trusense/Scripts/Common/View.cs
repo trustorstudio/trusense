@@ -5,6 +5,11 @@ namespace Trusense.Common
     /// <summary>
     /// Abstract base class for UI or visual components, inheriting from MonoBehaviour.
     /// Enforces a consistent interface for initialization, cleanup, and visibility management.
+    /// 
+    /// Author: Nguyễn Duy Khánh
+    /// Created: August 6, 2025
+    /// Last Modified: August 6, 2025
+    /// Version: 1.0.0
     /// </summary>
     public abstract class View : MonoBehaviour
     {
