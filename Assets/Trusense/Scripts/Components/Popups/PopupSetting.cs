@@ -16,7 +16,7 @@ namespace Trusense.Components.Popups
     /// Author: Nguyễn Duy Khánh
     /// Created: August 6, 2025
     /// Last Modified: August 6, 2025
-    /// Version: 1.0
+    /// Version: 1.0.1
     /// </summary>
     public class PopupSetting : Popup
     {
@@ -63,6 +63,28 @@ namespace Trusense.Components.Popups
         [SerializeField] private Image pushAlarmBackground;
         [Tooltip("Image handle to display the pushAlarm setting.")]
         [SerializeField] private Image pushAlarmHandle;
+
+        // === UI Sound FX Components ===
+        [Header("UI Sound FX Components")]
+        [Tooltip("Slider to sound fx settings ")]
+        [SerializeField] private Slider soundFxSlider;
+        [Tooltip("Image handle display sound fx settings")]
+        [SerializeField] private Image soundFxImage;
+        [Tooltip("Sprite handle in active sound Fx settings")]
+        [SerializeField] private Sprite soundFxActive;
+        [Tooltip("Sprite handle active sound Fx settings")]
+        [SerializeField] private Sprite soundFxInactive;
+
+        // === UI Sound Music Components ===
+        [Header("UI Sound Music Components")]
+        [Tooltip("Slider to sound Music settings ")]
+        [SerializeField] private Slider soundMusicSlider;
+        [Tooltip("Image handle display sound Music settings")]
+        [SerializeField] private Image soundMusicImage;
+        [Tooltip("Sprite handle in active sound Music settings")]
+        [SerializeField] private Sprite soundMusicActive;
+        [Tooltip("Sprite handle active sound music settings")]
+        [SerializeField] private Sprite soundMusicInactive;
 
         /// <summary>
         /// Initializes the popup settings.
