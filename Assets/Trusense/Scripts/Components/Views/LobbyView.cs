@@ -62,7 +62,7 @@ namespace Trusense.Components.Views
                 settingButton.onClick.RemoveAllListeners();
                 settingButton.onClick.AddListener(HandleSetting);
             }
-            
+
             if (EnergyManager.Current != null)
             {
                 EnergyManager.Current.OnEnergyChanged += UpdateEnergy;
@@ -139,7 +139,7 @@ namespace Trusense.Components.Views
         /// </summary>
         private void HandleShop()
         {
-
+            ViewManager.Current.Show<ShopView>();
         }
 
         private void HandleSetting()
