@@ -11,12 +11,14 @@ namespace Trusense.Constants
     /// </summary>
     public static class Keys
     {
-        public const string CURRENT_ENERGY = "CURRENT_ENERGY";
         public const string NEXT_ENERGY_TIME = "NEXT_ENERGY_TIME";
         public const string LAST_ENERGY_TIME = "LAST_ENERGY_TIME";
+        public const string CURRENT_ENERGY = "CURRENT_ENERGY";
         public const string REMEMBER_ME = "REMEMBER_ME";
+        public const string PUSH_ALARM = "PUSH_ALARM";
+        public const string VIBRATION = "VIBRATION";
+        public const string LANGUAGE = "LANGUAGE";
         public const string USERNAME = "USERNAME";
         public const string PRIVACY = "PRIVACY";
-        public const string LANGUAGE = "LANGUAGE";
     }
 }

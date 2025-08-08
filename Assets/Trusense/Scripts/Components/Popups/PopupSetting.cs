@@ -1,3 +1,4 @@
+using DG.Tweening;
 using TMPro;
 using Trusense.Common;
 using Trusense.Constants;
@@ -19,14 +20,49 @@ namespace Trusense.Components.Popups
     /// </summary>
     public class PopupSetting : Popup
     {
+        // === Animation Settings ===
+        [Header("Animation Settings")]
+        [Tooltip("Duration of the handle movement animation in seconds.")]
+        [SerializeField] private float moveDuration = 0.3f;
+        [Tooltip("Easing type for the handle movement animation.")]
+        [SerializeField] private Ease moveEase = Ease.InOutQuad;
+        // === UI Sprite Components ===
+        [Header("UI Sprite Components")]
+        [Tooltip("Color for the active background of the popup.")]
+        [SerializeField] private Sprite activeBackgroud;
+        [Tooltip("Color for the inactive background of the popup.")]
+        [SerializeField] private Sprite inactiveBackground;
+        [Tooltip("Color for the active handle of the popup.")]
+        [SerializeField] private Sprite activeHandle;
+        [Tooltip("Color for the inactive handle of the popup.")]
+        [SerializeField] private Sprite inactiveHandle;
+
         // === UI Button Components ===
-        [Header("UI Button Components")]
+        [Header("UI Language Components")]
         [Tooltip("Image component to visually represent the language setting.")]
         [SerializeField] private Image languageImage;
         [Tooltip("The button that opens the language settings.")]
         [SerializeField] private Button languageButton;
         [Tooltip("Text component to display the current language setting.")]
         [SerializeField] private TMP_Text languageText;
+
+        // === UI Vibration Components ===
+        [Header("UI Vibration Components")]
+        [Tooltip("Button to toggle vibration settings.")]
+        [SerializeField] private Toggle vibrationToggle;
+        [Tooltip("Image background to display the vibration setting.")]
+        [SerializeField] private Image vibrationBackground;
+        [Tooltip("Image handle to display the vibration setting.")]
+        [SerializeField] private Image vibrationHandle;
+
+        // === UI Push Alam Components ===
+        [Header("UI Push Alarm Components")]
+        [Tooltip("Button to toggle push alarm settings.")]
+        [SerializeField] private Toggle pushAlarmToggle;
+        [Tooltip("Image background to display the pushAlarm setting.")]
+        [SerializeField] private Image pushAlarmBackground;
+        [Tooltip("Image handle to display the pushAlarm setting.")]
+        [SerializeField] private Image pushAlarmHandle;
 
         /// <summary>
         /// Initializes the popup settings.
@@ -42,7 +78,20 @@ namespace Trusense.Components.Popups
                 languageButton.onClick.RemoveAllListeners();
                 languageButton.onClick.AddListener(HandleLanguage);
             }
-
+            if (vibrationToggle != null)
+            {
+                bool vibrationEnabled = PlayerPrefs.GetInt(Keys.VIBRATION, 1) == 1;
+                vibrationToggle.isOn = vibrationEnabled;
+                OnVibration(vibrationEnabled);
+                vibrationToggle.onValueChanged.AddListener(OnVibration);
+            }
+            if (pushAlarmToggle != null)
+            {
+                bool pushAlarmEnabled = PlayerPrefs.GetInt(Keys.PUSH_ALARM, 1) == 1;
+                pushAlarmToggle.isOn = pushAlarmEnabled;
+                OnPushAlarm(pushAlarmEnabled);
+                pushAlarmToggle.onValueChanged.AddListener(OnPushAlarm);
+            }
             EventManager.Current.OnLanguageChanged.RemoveListener(UpdateLanguage);
             EventManager.Current.OnLanguageChanged.AddListener(UpdateLanguage);
 
@@ -58,7 +107,22 @@ namespace Trusense.Components.Popups
             {
                 languageButton.onClick.RemoveListener(HandleLanguage);
             }
-            EventManager.Current.OnLanguageChanged.RemoveListener(UpdateLanguage);
+
+            if (vibrationToggle != null)
+            {
+                vibrationToggle.onValueChanged.RemoveListener(OnVibration);
+            }
+            if (pushAlarmToggle != null)
+            {
+                pushAlarmToggle.onValueChanged.RemoveListener(OnPushAlarm);
+            }
+            if (EventManager.Current != null)
+            {
+                EventManager.Current.OnLanguageChanged.RemoveListener(UpdateLanguage);
+            }
+
+            DOTween.Kill(vibrationHandle);
+            DOTween.Kill(pushAlarmHandle);
             base.Clean();
         }
 
@@ -95,6 +159,46 @@ namespace Trusense.Components.Popups
             {
                 languageText.text = language.ToUpper();
             }
+        }
+        /// <summary>
+        /// Handles the toggle change event for vibration settings.
+        /// This method updates the vibration state in PlayerPrefs and applies the changes.
+        /// </summary>
+        /// <param name="isOn"></param>
+        private void OnVibration(bool isOn)
+        {
+            if (vibrationBackground != null)
+                vibrationBackground.sprite = isOn ? activeBackgroud : inactiveBackground;
+            if (vibrationHandle != null)
+            {
+                vibrationHandle.sprite = isOn ? activeHandle : inactiveHandle;
+                Vector3 currentPos = vibrationHandle.rectTransform.anchoredPosition;
+                float newX = isOn ? -Mathf.Abs(currentPos.x) : Mathf.Abs(currentPos.x);
+                vibrationHandle.rectTransform.DOAnchorPosX(newX, moveDuration).SetEase(moveEase);
+            }
+
+            PlayerPrefs.SetInt(Keys.VIBRATION, isOn ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+
+        /// <summary>
+        /// Handles the toggle change event for push alarm settings.
+        /// This method updates the push alarm state in PlayerPrefs and applies the changes.
+        /// </summary>
+        /// <param name="isOn"></param>
+        private void OnPushAlarm(bool isOn)
+        {
+            if (pushAlarmBackground != null)
+                pushAlarmBackground.sprite = isOn ? activeBackgroud : inactiveBackground;
+            if (pushAlarmHandle != null)
+            {
+                pushAlarmHandle.sprite = isOn ? activeHandle : inactiveHandle;
+                Vector3 currentPos = pushAlarmHandle.rectTransform.anchoredPosition;
+                float newX = isOn ? -Mathf.Abs(currentPos.x) : Mathf.Abs(currentPos.x);
+                pushAlarmHandle.rectTransform.DOAnchorPosX(newX, moveDuration).SetEase(moveEase);
+            }
+            PlayerPrefs.SetInt(Keys.PUSH_ALARM, isOn ? 1 : 0);
+            PlayerPrefs.Save();
         }
     }
 }
