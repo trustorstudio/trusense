@@ -3,7 +3,6 @@ using UnityEngine;
 using Trusense.Common;
 using Trusense.Tools;
 using System.Collections.Generic;
-using Trusense.Managers;
 
 namespace Trusense.Managers
 {

@@ -36,6 +36,7 @@ namespace Trusense.Components.Popups
         {
             if (_isInitialized) return;
             base.Initialized();
+            UpdateLanguage(LanguageManager.Current.GetLanguage());
             if (languageButton != null)
             {
                 languageButton.onClick.RemoveAllListeners();
@@ -76,17 +77,18 @@ namespace Trusense.Components.Popups
         /// This method can be called to refresh the language display based on the current settings.
         /// </summary>
         /// <param name="language"></param>
-        private void UpdateLanguage(string language)
+        private void UpdateLanguage(string language = "English")
         {
+
             if (string.IsNullOrEmpty(language))
             {
-                language = "english";
+                language = "English";
             }
 
             if (languageImage != null)
             {
                 Sprite sprite = Resources.Load<Sprite>($"Flags/{language}");
-                languageImage.sprite = sprite ?? Resources.Load<Sprite>("Flags/english");
+                languageImage.sprite = sprite != null ? sprite : Resources.Load<Sprite>("Flags/english");
             }
 
             if (languageText != null)

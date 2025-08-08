@@ -74,8 +74,6 @@ namespace Trusense.Common
             }
         }
 
-
-
         /// <summary>
         /// Initializes the Flag component.
         /// This method can be overridden to set up specific settings for the flag.
@@ -131,11 +129,11 @@ namespace Trusense.Common
         {
             if (isSelected)
             {
-                GameManager.Current.SetLanguage(language);
+                LanguageManager.Current.SetLanguage(language);
             }
-            else if (GameManager.Current.GetLanguage() == language)
+            else if (LanguageManager.Current.GetLanguage() == language)
             {
-                GameManager.Current.ClearLanguage();
+                LanguageManager.Current.ClearLanguage();
             }
         }
 
@@ -145,7 +143,7 @@ namespace Trusense.Common
         /// </summary>
         public void Load()
         {
-            isSelected = GameManager.Current.GetLanguage() == language;
+            isSelected = LanguageManager.Current.GetLanguage() == language;
             if (checkIcon != null)
             {
                 checkIcon.gameObject.SetActive(isSelected);
