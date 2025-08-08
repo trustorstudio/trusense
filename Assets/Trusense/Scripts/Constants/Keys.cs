@@ -20,5 +20,6 @@ namespace Trusense.Constants
         public const string LANGUAGE = "LANGUAGE";
         public const string USERNAME = "USERNAME";
         public const string PRIVACY = "PRIVACY";
+        public const string RATING = "RATING";
     }
 }
